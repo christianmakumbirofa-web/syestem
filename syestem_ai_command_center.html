@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>SYESTEM | AI Command Center</title>
+<style>
+:root{--bg:#050b14;--panel:#0b1726;--line:#183650;--cyan:#53dcff;--blue:#348cff;--muted:#91a9bd;--white:#eaf7ff;--green:#5df0b0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 35%,#10243a 0%,#07111f 45%,#03070d 100%);color:var(--white);font-family:Inter,Segoe UI,Arial,sans-serif;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 5%;border-bottom:1px solid #163047;background:#06101bd9;position:sticky;top:0;z-index:2;backdrop-filter:blur(12px)}
+.brand{letter-spacing:4px;font-weight:800;color:var(--cyan);font-size:20px}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:3px;margin-top:5px}
+.status{font-size:12px;color:var(--green);letter-spacing:1px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);margin-right:8px}
+main{max-width:1180px;margin:0 auto;padding:28px 5% 60px}
+.topline{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:22px}.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:3px}.topline h1{font-size:clamp(25px,4vw,40px);margin:8px 0 0}.clock{text-align:right;color:var(--muted);font-size:13px}.clock strong{display:block;color:var(--white);font-size:23px;letter-spacing:2px}
+.grid{display:grid;grid-template-columns:1.35fr .85fr;gap:18px}.panel{background:linear-gradient(145deg,#0d1c2cdd,#081321ee);border:1px solid var(--line);border-radius:17px;padding:21px;box-shadow:0 12px 35px #0005}.panel h2{font-size:13px;letter-spacing:2px;color:var(--cyan);margin:0 0 18px}
+.core{min-height:330px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.orb{width:168px;height:168px;border-radius:50%;border:1px solid #48d9ff99;display:grid;place-items:center;position:relative;margin:5px auto 20px;box-shadow:0 0 35px #21bfff30,inset 0 0 35px #21bfff20}
+.orb:before,.orb:after{content:"";position:absolute;border:1px solid #42cfff70;border-radius:50%;inset:12px;animation:spin 12s linear infinite}
+.orb:after{inset:-9px;border-style:dashed;animation:spin 24s linear infinite reverse}
+.orb span{font-size:42px;color:var(--cyan);text-shadow:0 0 22px var(--cyan)}
+@keyframes spin{to{transform:rotate(360deg)}}.listening .orb{box-shadow:0 0 60px #21bfff80,inset 0 0 45px #21bfff55}.listening .orb:before{animation-duration:2s}
+#assistantStatus{color:var(--muted);font-size:13px;min-height:20px}.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+button{border:1px solid #286184;background:#0b2338;color:var(--white);padding:11px 15px;border-radius:10px;cursor:pointer;font-weight:650;transition:.2s}
+button:hover{border-color:var(--cyan);box-shadow:0 0 16px #35cfff30;transform:translateY(-1px)}button.primary{background:linear-gradient(100deg,#087ea8,#1767c4);border:0}
+input{width:100%;background:#06101c;border:1px solid #23435d;border-radius:10px;color:var(--white);padding:13px;outline:none}input:focus{border-color:var(--cyan)}
+.commandrow{display:flex;gap:9px;margin-top:16px}.commandrow input{flex:1;min-width:0}
+.reply{margin-top:16px;padding:13px;background:#06111e;border:1px solid #17344c;border-radius:10px;color:#c8e5f5;min-height:48px;font-size:13px;line-height:1.5}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tile{background:#071321;border:1px solid #18364e;border-radius:12px;padding:15px}.tile span{display:block;color:var(--muted);font-size:11px;letter-spacing:1px}.tile strong{display:block;font-size:17px;margin-top:8px}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tool{padding:15px 10px;text-align:center;min-height:85px}.tool b{display:block;font-size:20px;margin-bottom:7px}.tool span{font-size:11px;color:#c1d6e5}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.taskline{display:flex;gap:8px}.taskline input{flex:1;min-width:0}.tasks{padding:0;list-style:none;margin:12px 0 0}.tasks li{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #173047;font-size:13px}.tasks li button{padding:4px 8px;font-size:11px}
+.log{height:150px;overflow:auto;font:12px/1.7 ui-monospace,monospace;color:#9cc6dd}.log div:before{content:"› ";color:var(--cyan)}
+footer{text-align:center;color:#607c91;font-size:11px;margin-top:28px;letter-spacing:1px}
+@media(max-width:760px){.grid,.lower{grid-template-columns:1fr}.topline{align-items:start;flex-direction:column}.clock{text-align:left}.tools{grid-template-columns:repeat(3,1fr)}header{padding:17px 5%}.panel{padding:17px}}
+</style>
+</head>
+<body>
+<header><div class="brand">SYESTEM <small>PERSONAL AI COMMAND CENTER</small></div><div class="status"><i class="dot"></i>SYSTEM ONLINE</div></header>
+<main>
+ <div class="topline"><div><div class="eyebrow">WELCOME BACK</div><h1>How can I help you?</h1></div><div class="clock"><strong id="time">--:--:--</strong><span id="date">Loading date…</span></div></div>
+ <section class="grid">
+  <div class="panel core" id="core">
+   <div class="eyebrow">VOICE INTERFACE</div><div class="orb"><span>✧</span></div>
+   <div id="assistantStatus">Ready when you are.</div>
+   <div class="controls"><button class="primary" id="micBtn">🎙 Start listening</button><button id="speakBtn">🔊 Test voice</button></div>
+   <div class="commandrow"><input id="command" placeholder="Type a command… e.g. what time is it"><button class="primary" id="sendBtn">Send</button></div>
+   <div class="reply" id="reply">SYESTEM: All core interface modules are ready.</div>
+  </div>
+  <div class="panel"><h2> SYSTEM OVERVIEW</h2><div class="tiles">
+   <div class="tile"><span>CORE STATUS</span><strong style="color:var(--green)">Operational</strong></div>
+   <div class="tile"><span>VOICE MODULE</span><strong id="voiceState">Standby</strong></div>
+   <div class="tile"><span>LOCAL STORAGE</span><strong>Enabled</strong></div>
+   <div class="tile"><span>AI CONNECTION</span><strong>Not connected</strong></div>
+  </div><p style="color:var(--muted);font-size:12px;line-height:1.6;margin:17px 0 0">This starter version runs in your browser. A live AI brain/API can be connected later; keep private API keys on a secure backend, never inside this page.</p></div>
+ </section>
+ <section class="panel" style="margin-top:18px"><h2>QUICK TOOLS</h2><div class="tools">
+  <button class="tool" data-cmd="What time is it?"><b>◷</b><span>Time</span></button>
+  <button class="tool" data-cmd="Open search"><b>⌕</b><span>Web search</span></button>
+  <button class="tool" data-cmd="Tell me a fun fact"><b>✦</b><span>Fun fact</span></button>
+ </div></section>
+ <section class="lower">
+  <div class="panel"><h2>PERSONAL TASKS</h2><div class="taskline"><input id="taskInput" placeholder="Add a task…"><button class="primary" id="addTask">Add</button></div><ul class="tasks" id="tasks"></ul></div>
+  <div class="panel"><h2>SYSTEM ACTIVITY</h2><div class="log" id="log"></div></div>
+ </section>
+ <footer>SYESTEM SOFTWARE • PERSONAL PROJECT STARTER • VERSION 1.0</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString();$('date').textContent=d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
+tick();setInterval(tick,1000);
+function log(msg){const row=document.createElement('div');row.textContent=new Date().toLocaleTimeString()+' — '+msg;$('log').prepend(row);}
+function say(text){$('reply').textContent='SYESTEM: '+text;$('assistantStatus').textContent='Response ready.';if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=1; speechSynthesis.speak(u);}log(text);}
+function handle(raw){const c=raw.trim().toLowerCase();if(!c)return;
+ if(c.includes('time'))say('The time is '+new Date().toLocaleTimeString()+'.');
+ else if(c.includes('date')||c.includes('day'))say('Today is '+new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'.');
+ else if(c.includes('hello')||c.includes('hi'))say('Hello. SYESTEM is online and ready to assist.');
+ else if(c.includes('fun fact'))say('A day on Venus is longer than its year.');
+ else if(c.includes('search')||c.includes('google')){say('Opening a web search in a new tab.');window.open('https://www.google.com/search?q='+encodeURIComponent(raw.replace(/open search/i,'').trim()||'latest technology'),'_blank','noopener');}
+ else if(c.includes('help'))say('You can ask for the time or date, say hello, request a fun fact, or ask me to open a web search. You can also add tasks below.');
+ else say('I heard: '+raw+'. This starter assistant can handle basic local commands. Connect an AI service to enable open-ended answers.');
+}
+$('sendBtn').onclick=()=>{const v=$('command').value;$('command').value='';handle(v);};
+$('command').addEventListener('keydown',e=>{if(e.key==='Enter')$('sendBtn').click();});
+document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>handle(b.dataset.cmd));
+$('speakBtn').onclick=()=>say('Voice output test successful. Welcome to SYESTEM.');
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SpeechRecognition){const rec=new SpeechRecognition();rec.lang='en-US';rec.interimResults=false;rec.onstart=()=>{$('core').classList.add('listening');$('assistantStatus').textContent='Listening…';$('voiceState').textContent='Listening';};rec.onend=()=>{$('core').classList.remove('listening');$('voiceState').textContent='Standby';};rec.onerror=()=>{$('assistantStatus').textContent='Microphone unavailable. You can type a command instead.';};rec.onresult=e=>{const t=e.results[0][0].transcript;$('command').value=t;log('Voice input: '+t);handle(t);};$('micBtn').onclick=()=>{try{rec.start();}catch(e){$('assistantStatus').textContent='Already listening.';}};}else{$('micBtn').onclick=()=>say('Voice recognition is not supported in this browser. Try typing a command or use a supported desktop browser.');$('voiceState').textContent='Unsupported';}
+let tasks=JSON.parse(localStorage.getItem('syestem_tasks')||'[]');
+function renderTasks(){ $('tasks').innerHTML='';tasks.forEach((t,i)=>{const li=document.createElement('li');const span=document.createElement('span');span.textContent=t;const btn=document.createElement('button');btn.textContent='Done';btn.onclick=()=>{tasks.splice(i,1);saveTasks();};li.append(span,btn);$('tasks').append(li);});}
+function saveTasks(){localStorage.setItem('syestem_tasks',JSON.stringify(tasks));renderTasks();}
+$('addTask').onclick=()=>{const v=$('taskInput').value.trim();if(v){tasks.push(v);$('taskInput').value='';saveTasks();log('Task added: '+v);}};
+$('taskInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('addTask').click();});
+renderTasks();log('Interface initialized.');log('Local task storage ready.');
+</script>
+</body>
+</html>
